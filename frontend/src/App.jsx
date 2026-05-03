@@ -6,7 +6,8 @@ function App() {
   const [formData, setFormData] = useState({
     name: '',
     price: '',
-    // TODO (Student): Add missing fields for the state
+    description: '',
+    category: '',
   });
 
   const fetchItems = async () => {
@@ -34,7 +35,8 @@ function App() {
       setFormData({
         name: '',
         price: '',
-        // TODO (Student): Clear the missing fields here
+        description: '',
+        category: '',
       });
     } catch (err) {
       console.error('Error creating item:', err);
@@ -42,9 +44,12 @@ function App() {
   };
 
   const handleDelete = async (id) => {
-    // TODO (Student): Implement the delete functionality here
-    // Hint: Use axios.delete() and then call fetchItems()
-    console.log(`Delete item with ID: ${id}`);
+    try {
+      await axios.delete(`http://localhost:5000/api/items/${id}`);
+      fetchItems();
+    } catch (err) {
+      console.error('Error deleting item:', err);
+    }
   };
 
   return (
@@ -76,7 +81,31 @@ function App() {
             />
           </div>
 
-          {/* TODO (Student): Add input fields for 'description' and 'category' here */}
+          <div className="form-group">
+            <label>Description:</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Category:</label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Category</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Clothing">Clothing</option>
+              <option value="Food">Food</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
 
           <button type="submit" className="btn-primary">Add Item</button>
         </form>
@@ -93,7 +122,8 @@ function App() {
                 <div className="item-details">
                   <h3>{item.name}</h3>
                   <p>Price: ${item.price}</p>
-                  {/* TODO (Student): Display 'description' and 'category' here */}
+                  <p>Description: {item.description}</p>
+                  <p>Category: {item.category}</p>
                 </div>
                 <div className="item-actions">
                   <button

@@ -14,12 +14,13 @@ router.get('/', async (req, res) => {
 
 // POST /api/items - Create a new item
 router.post('/', async (req, res) => {
-  const { name, price } = req.body; // TODO (Student): Read the new fields here
+  const { name, price, description, category } = req.body; // TODO (Student): Read the new fields here
 
   const item = new Item({
     name,
     price,
-    // TODO (Student): Assign the new fields here
+    description,
+    category
   });
 
   try {
@@ -30,6 +31,26 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  /*const { name, price, description, category } = req.body; // TODO (Student): Read the new fields here
+
+  const item = new Item({
+    name,
+    price,
+    description,
+    category
+  });*/
+
+  try {
+    const deleteItem = await Item.findByIdAndDelete(req.params.id);
+    if (!deleteItem) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+    res.json({ message: 'Item deleted successfully' });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
 // TODO (Student): Implement DELETE /api/items/:id route here
 
 module.exports = router;
